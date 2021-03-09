@@ -15,11 +15,11 @@ router.post('/addperson', (req,res) =>{
 })
 //create many person using model.create()
 const arrayOfPeople = [
-              { name: 'Meeva', age: 30, favoriteFoods: ['Fettuccine Alfredo', 'Sushi', 'Quiche'] },
-              { name: 'burrito', age: 22, favoriteFoods: ['Pasta', 'French Fries'] },
-              { name: 'Mary', age: 41, favoriteFoods: ['Pasta', 'pizza', 'suchi'] },
-              { name: 'burrito', age: 10, favoriteFoods: ['Pasta', 'fish', 'Quiche'] },
-              { name: 'Mary', age: 36, favoriteFoods: ['Pasta', 'Cheeseburgers', 'French Fries'] }
+              { name: 'anis', age: 30, favoriteFoods: ['Fettuccine Alfredo', 'Sushi', 'Quiche'] },
+              { name: 'marwen', age: 22, favoriteFoods: ['Pasta', 'French Fries'] },
+              { name: 'anas', age: 41, favoriteFoods: ['Pasta', 'pizza', 'suchi'] },
+              { name: 'melek', age: 10, favoriteFoods: ['Pasta', 'fish', 'Quiche'] },
+              { name: 'mahdi', age: 36, favoriteFoods: ['Pasta', 'Cheeseburgers', 'French Fries'] }
             ];
      router.post('/addmanyperson',(req,res) =>{
             person.create(arrayOfPeople)
@@ -32,17 +32,13 @@ const arrayOfPeople = [
         })
 //Perform Classic Updates by Running Find, Edit, then Save
 
-// router.get('/peoples/:id',(req,res) =>{
-//     person.findById({_id : req.params.id},(err) =>{
-//         person.forEach(function(p) {
-//             for(var i = p.favoriteFoods.length - 1; i >= 0; i--) {
-//                   p.favoriteFoods[i].push('hamburger');
-//             }
-//             p.markModified('favoriteFoods');
-//             p.save();
-//     })
-//    console.log("favorite foods was updated !")
-// })
+router.get('/peoples/:id',(req,res) =>{
+    person.findById({_id : req.params.id},(err,doc) =>{
+      doc.favoriteFoods.push('hamburger');
+      doc.save();
+      err ? console.error(err) : res.json(doc);
+    })
+})
 
 
 // find person
@@ -78,18 +74,18 @@ router.delete('/deleteperson/:id' , (req,res) =>{
        err ? console.log(err) : res.json({msg : "person was deleted !"});
     })
 })
-// remove person whose name is Mary    erroné
+// remove person whose name is Mary
 router.delete('/deletepersonbyname' , (req,res) =>{
-    person.remove({$set :{name :'Mary'}},(err,msg)=>{
+    person.remove({name :'Mary'},(err,msg)=>{
        err ? console.log(err) : res.json({msg : "persons was deleted !"});
     })
 })
 
 //Chain Search Query Helpers to Narrow Search Results
 router.get('/all' ,(req,res) =>{
-   person.find({$set :{name :'Meeva'}}).limit(10).sort({name: 1})     
+   person.find({name :'Meeva'}).limit(10).sort({name: 1})     
     .select({age: false}) 
-    .exec()                   
+                     
     .then(docs => {
        res.json(docs);
      })
